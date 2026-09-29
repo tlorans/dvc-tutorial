@@ -1,0 +1,5 @@
+# Add these lines to your repository's .gitignore
+.venv/
+.env
+__pycache__/
+# DVC adds its own .gitignore entries for each output next to dvc.yaml

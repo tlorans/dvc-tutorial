@@ -1,0 +1,15 @@
+# Settings for the practice pipeline. DVC watches the sections each stage lists.
+
+risk:
+  confidence: 0.99      # 99% Value at Risk
+  window_days: 200      # how many recent trading days to use
+  weights:              # portfolio weights, must add up to 1
+    Alpine Steel: 0.25
+    Blue Wind: 0.25
+    Coastal Cement: 0.20
+    Delta Retail: 0.15
+    Echo Airlines: 0.15
+
+scenario:
+  name: Orderly transition 2030
+  carbon_price_eur: 85  # euros per tonne of CO2

@@ -1,0 +1,99 @@
+# pipelines/corporate/dvc.yaml for the example project "greenfin-risk".
+# Paths are relative to this folder. Adapt names, commands and keys to your project.
+
+stages:
+  download_market_data:
+    cmd: python -m greenfin.download market --portfolio corporate
+    deps:
+    - ../../src/greenfin/download.py
+    params:
+    - config.yaml:
+      - sources.market_data          # the snapshot date: move it to fetch new data
+    outs:
+    - data/raw/market
+
+  download_emissions:
+    cmd: python -m greenfin.download emissions --portfolio corporate
+    deps:
+    - ../../src/greenfin/download.py
+    params:
+    - config.yaml:
+      - sources.emissions
+    outs:
+    - data/raw/emissions
+
+  prepare:
+    cmd: python -m greenfin.prepare --portfolio corporate
+    deps:
+    - ../../src/greenfin/prepare.py
+    - data/raw/market
+    - data/raw/emissions
+    outs:
+    - data/prepared
+    metrics:
+    - metrics/coverage.json:
+        cache: false
+
+  cash_flow:
+    cmd: python -m greenfin.cash_flow --portfolio corporate
+    deps:
+    - ../../src/greenfin/cash_flow.py
+    - ../../src/greenfin/common
+    - data/prepared/companies.parquet
+    - data/prepared/financials.parquet
+    params:
+    - config.yaml:
+      - scenarios
+      - carbon_prices
+      - horizons
+    outs:
+    - data/cash_flow
+    metrics:
+    - metrics/cash_flow.json:
+        cache: false
+
+  valuation:
+    cmd: python -m greenfin.valuation --portfolio corporate
+    deps:
+    - ../../src/greenfin/valuation.py
+    - ../../src/greenfin/common
+    - data/cash_flow
+    - data/prepared/market.parquet
+    params:
+    - config.yaml:
+      - valuation
+    outs:
+    - data/valuation
+    metrics:
+    - metrics/valuation.json:
+        cache: false
+
+  ratings:
+    cmd: python -m greenfin.ratings --portfolio corporate
+    deps:
+    - ../../src/greenfin/ratings.py
+    - data/valuation
+    params:
+    - config.yaml:
+      - ratings
+    outs:
+    - data/ratings
+    metrics:
+    - metrics/ratings.json:
+        cache: false
+
+  report:
+    cmd: python -m greenfin.report --portfolio corporate
+    deps:
+    - ../../src/greenfin/report.py
+    - data/ratings
+    outs:
+    - data/report
+
+  publish:
+    frozen: true                     # dvc repro never runs this; the release workflow does
+    cmd: python -m greenfin.publish --portfolio corporate
+    deps:
+    - ../../src/greenfin/publish.py
+    - data/ratings
+    - data/report

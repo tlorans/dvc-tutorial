@@ -1,0 +1,26 @@
+# pipelines/corporate/config.yaml for the example project "greenfin-risk".
+# Each stage in dvc.yaml depends only on the keys it lists, so changing one
+# section reruns only the stages that read it.
+
+sources:
+  market_data: "2026-09-30"   # snapshot date of the market data download
+  emissions: "2026-06-30"     # snapshot date of the emissions data
+
+scenarios:                    # climate scenarios to run
+  - orderly_transition
+  - delayed_transition
+  - current_policies
+
+carbon_prices:                # EUR per tonne of CO2, by scenario and year
+  orderly_transition: {2030: 140, 2040: 250, 2050: 400}
+  delayed_transition: {2030: 40, 2040: 300, 2050: 500}
+  current_policies: {2030: 30, 2040: 40, 2050: 50}
+
+horizons: [2030, 2040, 2050]
+
+valuation:
+  discount_rate: 0.08
+  terminal_growth: 0.02
+
+ratings:
+  grades: [A, B, C, D, E, F, G]   # A = lowest climate risk
