@@ -1,0 +1,4 @@
+# Quarto previews of the tutorial pages
+docs/*.html
+docs/*_files/
+.quarto/
