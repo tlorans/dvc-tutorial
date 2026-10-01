@@ -48,21 +48,15 @@ Four ideas are enough:
 | `uv add <package>` | Adds a package to `pyproject.toml` and `uv.lock`. In a team, do this in a pull request, because it changes everyone's environment. |
 | `uv tree` | Shows which packages are installed and why. |
 | `uv python install 3.12` | Installs a Python version, if a project needs one you don't have. |
-| `uv venv` + `uv pip install -r requirements.txt` | The "classic" way for small folders without a `pyproject.toml`. We use it for the practice project. |
 
-Two ways of working with the environment:
+In this tutorial, every `dvc` and `python` command starts with `uv run`:
 
 ```powershell
-# 1. Projects with a pyproject.toml: prefix commands with uv run. Nothing to activate.
-uv run dvc status
-
-# 2. The practice project: activate once, then type commands directly.
-.venv\Scripts\activate
-dvc status
+uv run dvc status          # runs DVC inside the project's environment
+uv run make_data.py        # runs a Python script the same way
 ```
 
-Both run DVC inside the project's environment. `uv run` is safer in team projects, because it
-always checks that your packages match `uv.lock` first.
+There is nothing to activate, and `uv run` always checks first that your packages match `uv.lock`.
 
 ## Done
 

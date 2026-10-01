@@ -10,7 +10,9 @@ It is safe to break: everything runs on your laptop, with made-up data and no cr
 | `risk.py` | Stage 2: returns → portfolio Value at Risk (reads the `risk` settings) |
 | `climate_stress.py` | Stage 3: carbon-price stress test on company profits (reads the `scenario` settings) |
 | `params.yaml` | The settings DVC watches |
-| `requirements.txt` | Python packages needed |
+| `pyproject.toml` | Python packages needed |
+| `uv.lock` | The exact version of each package, written by uv |
+| `.gitattributes` | Stops git on Windows from changing the metrics files, so a fresh clone matches `dvc.lock` |
 
 The pipeline looks like this once you have built it:
 

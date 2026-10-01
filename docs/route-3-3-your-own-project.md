@@ -19,6 +19,7 @@ but have different data, so each has its own pipeline, its own settings and its 
 ```
 C:\projects\greenfin-risk\
 ├── .dvc\config                  DVC settings: one remote per pipeline
+├── .gitattributes               keeps metrics files byte for byte (section 2)
 ├── pyproject.toml, uv.lock      Python packages (see [Git and uv basics](git-and-uv-basics.md))
 ├── src\greenfin\                the code, shared by both pipelines
 │   ├── download.py  prepare.py  cash_flow.py  valuation.py
@@ -66,12 +67,18 @@ prepare → calculate → score → report → publish**.
 cd C:\projects\greenfin-risk
 uv add "dvc[s3]"
 uv run dvc init
-git add .dvc .dvcignore pyproject.toml uv.lock
+Add-Content .gitattributes "**/metrics/** -text"   # keep metrics files byte for byte
+git add .dvc .dvcignore .gitattributes pyproject.toml uv.lock
 git commit -m "Add DVC"
 ```
 
 If the repository has no `pyproject.toml` yet, run `uv init --bare` first to create one. For Azure
 storage use `dvc[azure]`, for Google Cloud `dvc[gs]`.
+
+The `.gitattributes` line matters on Windows. Metrics files are kept in git, and `dvc.lock`
+records their hash. Git for Windows normally changes line endings when it checks files out, so
+without this line a colleague's fresh clone shows every metrics file as modified. The same line
+is in [`templates/gitattributes.txt`](../templates/gitattributes.txt).
 
 **2. Create the storage.** Ask your cloud administrator for an S3 bucket (or a folder in an
 existing one) and for read/write credentials. Then add one remote per pipeline:

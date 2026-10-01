@@ -109,8 +109,7 @@ about it; if that's you, skip it.
 ## Conventions
 
 - Commands are for **Windows and PowerShell**. (On a Mac or Linux almost everything is the same.
-  The two differences: activate environments with `source .venv/bin/activate`, and end continued
-  lines with `\` instead of a backtick.)
+  The one difference: end continued lines with `\` instead of a backtick.)
 - Lines starting with `#` are comments: you don't type them.
 - Text in angle brackets, like `<commit-id>`, is a placeholder: replace it, brackets included.
 - Boxes marked **Good at git** or **New to git** tell you what to skip or read closely.

@@ -1,0 +1,11 @@
+[project]
+name = "dvc-practice"
+version = "0.1.0"
+description = "A small portfolio risk pipeline to practise DVC"
+requires-python = ">=3.10"
+dependencies = [
+    "dvc>=3.50",
+    "pandas>=2.0",
+    "numpy>=1.26",
+    "pyyaml>=6.0",
+]

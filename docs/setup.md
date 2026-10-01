@@ -146,8 +146,7 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 ```
 
 If company policy blocks that, use the **Command Prompt** instead (type `cmd` in the Start menu).
-Every command in this tutorial works there too, except that you activate environments with
-`.venv\Scripts\activate.bat`.
+Every command in this tutorial works there too.
 
 ## Step 7 – Optional: use VS Code
 

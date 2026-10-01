@@ -1,0 +1,4 @@
+# Add these lines to your repository's .gitattributes
+# Metrics files are kept in git, and DVC records their hash in dvc.lock.
+# Stop git from changing their line endings, or a fresh clone looks modified on Windows.
+**/metrics/** -text

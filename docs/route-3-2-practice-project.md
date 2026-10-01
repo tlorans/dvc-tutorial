@@ -16,37 +16,110 @@ laptop with made-up data, so you can't break anything.
 ## Step 1 – Copy the practice project and install DVC
 
 Copy the [`practice-project`](../practice-project/) folder of this repository to `C:\dvc-practice`,
-outside the company repositories and outside OneDrive.
+outside the company repositories and outside OneDrive. In PowerShell:
+
+```powershell
+git clone https://github.com/valeriyastrizhkova/dvc-tutorial.git C:\projects\dvc-tutorial   # get this tutorial
+Copy-Item -Recurse C:\projects\dvc-tutorial\practice-project C:\dvc-practice                # copy the practice folder
+```
+
+If you already have this repository on your laptop, skip the `git clone` line and change the
+path in the `Copy-Item` line to where it is. Run `Copy-Item` only once: if `C:\dvc-practice`
+already exists, it puts a second copy inside it.
 
 **In VS Code:** open `C:\dvc-practice` with *File → Open Folder*, then *Terminal → New Terminal*,
-and skip the `cd` line below. After `uv venv`, select the `.venv` interpreter as in
+and skip the `cd` line below. After `uv sync`, select the `.venv` interpreter as in
 [Setup, step 7](setup.md#step-7--optional-use-vs-code).
 
-Then, in PowerShell:
+Then install DVC, in PowerShell:
 
 ```powershell
 cd C:\dvc-practice
-uv venv                              # creates a private Python environment in .venv
-.venv\Scripts\activate               # turns it on for this terminal
-uv pip install -r requirements.txt   # installs DVC, pandas, numpy, pyyaml
-dvc --version                        # should print 3.x
+uv sync                # creates .venv and installs DVC, pandas, numpy, pyyaml
+uv run dvc --version   # should print 3.x
 ```
 
-You should see `(dvc-practice)` or `(.venv)` at the start of your terminal line. That means the
-environment is active. If you close the terminal, run the `activate` line again.
+You should see:
 
-If activation fails with "running scripts is disabled on this system", see [Setup, step 6](setup.md#step-6--allow-powershell-to-run-scripts).
+```text
+Using CPython 3.14.4
+Creating virtual environment at: .venv
+Resolved 112 packages in 1ms
+Installed 101 packages in 1.76s
+ + aiohappyeyeballs==2.7.1
+ + aiohttp==3.14.3
+ ...                                   (about 100 lines, one per package)
+ + zc-lockfile==4.0
+3.67.1
+```
+
+Your Python version and the timings can be different. The first time, uv also downloads the
+packages, so it can take a minute.
+
+`uv sync` reads the package list in `pyproject.toml` and installs the exact versions written in
+`uv.lock`, so everyone doing the tutorial gets the same packages.
+
+From now on, every `dvc` and `python` command starts with `uv run`. It runs the command inside
+`.venv`, so there is nothing to activate, and it works the same in every new terminal.
 
 ## Step 2 – Start git and DVC
 
 ```powershell
-git init                                           # start a git history in this folder
-dvc init                                           # add DVC to it (creates the .dvc folder)
-python -c "open('.gitignore','w').write('.venv/\n')"   # tell git to ignore the environment
+git init             # start a git history in this folder
+uv run dvc init      # add DVC to it (creates the .dvc folder)
 git add .
 git commit -m "Start practice project with DVC"
-git branch -M main                                 # name the main line of work "main"
+git branch -M main   # name the main line of work "main"
 ```
+
+You should see:
+
+```text
+Initialized empty Git repository in C:/dvc-practice/.git/
+Initialized DVC repository.
+
+You can now commit the changes to git.
+
++---------------------------------------------------------------------+
+|                                                                     |
+|        DVC has enabled anonymous aggregate usage analytics.         |
+|     Read the analytics documentation (and how to opt-out) here:     |
+|             <https://dvc.org/doc/user-guide/analytics>              |
+|                                                                     |
++---------------------------------------------------------------------+
+
+What's next?
+------------
+- Check out the documentation: <https://dvc.org/doc>
+- Get help and share ideas: <https://dvc.org/chat>
+- Star us on GitHub: <https://github.com/treeverse/dvc>
+warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'pyproject.toml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'uv.lock', LF will be replaced by CRLF the next time Git touches it
+[master (root-commit) 41a2484] Start practice project with DVC
+ 12 files changed, 3287 insertions(+)
+ create mode 100644 .dvc/.gitignore
+ create mode 100644 .dvc/config
+ create mode 100644 .dvcignore
+ create mode 100644 .gitattributes
+ create mode 100644 README.md
+ create mode 100644 climate_stress.py
+ create mode 100644 make_data.py
+ create mode 100644 params.yaml
+ create mode 100644 pyproject.toml
+ create mode 100644 returns.py
+ create mode 100644 risk.py
+ create mode 100644 uv.lock
+```
+
+Two things in this output are normal:
+
+- **The `warning: ... LF will be replaced by CRLF` lines.** Git on Windows is telling you how it
+  stores line endings. You can ignore them, here and in later steps.
+- **The commit id**, `41a2484` here. Yours is different, because it depends on your name and the
+  time. The same goes for every commit id on this page.
+
+You don't need to tell git to ignore `.venv`: `uv sync` already put a `.gitignore` inside it.
 
 `dvc init` created a hidden `.dvc` folder. It holds DVC's settings (`.dvc/config`) and, later,
 the cache.
@@ -56,15 +129,36 @@ the cache.
 Create the input data. In real life this would be a download from a data provider.
 
 ```powershell
-python make_data.py
+uv run make_data.py
+```
+
+You should see:
+
+```text
+Wrote data/prices.csv (250 trading days) and data/companies.csv
 ```
 
 This writes `data/prices.csv` (250 trading days for five companies) and `data/companies.csv`
 (their emissions and profits). Now hand them to DVC:
 
 ```powershell
-dvc add data/prices.csv data/companies.csv
+uv run dvc add data/prices.csv data/companies.csv
 ```
+
+You should see:
+
+```text
+To track the changes with git, run:
+
+	git add 'data\.gitignore' 'data\prices.csv.dvc' 'data\companies.csv.dvc'
+
+To enable auto staging, run:
+
+	dvc config core.autostage true
+```
+
+DVC ends many commands with this kind of hint. You don't need to follow it: this page always
+gives you the `git add` to run next. From here on, the outputs below leave the hint out.
 
 DVC did three things:
 
@@ -90,6 +184,16 @@ git add data/prices.csv.dvc data/companies.csv.dvc data/.gitignore
 git commit -m "Add input data, version 1"
 ```
 
+You should see:
+
+```text
+[main efe1ca4] Add input data, version 1
+ 3 files changed, 12 insertions(+)
+ create mode 100644 data/.gitignore
+ create mode 100644 data/companies.csv.dvc
+ create mode 100644 data/prices.csv.dvc
+```
+
 > **The key idea:** git now stores a 5-line pointer, not the data. The data itself stays in the
 > DVC cache, and later in the remote.
 
@@ -99,10 +203,19 @@ In a real project the remote is usually cloud storage, such as an S3 bucket. For
 project, so no credentials are needed:
 
 ```powershell
-dvc remote add -d practice ../dvc-practice-storage   # -d makes it the default remote
+uv run dvc remote add -d practice ../dvc-practice-storage   # -d makes it the default remote
 git add .dvc/config
 git commit -m "Configure practice storage"
-dvc push                                             # copies the cache to the remote
+uv run dvc push                                             # copies the cache to the remote
+```
+
+You should see:
+
+```text
+Setting 'practice' as a default remote.
+[main 2da773d] Configure practice storage
+ 1 file changed, 4 insertions(+)
+2 files pushed
 ```
 
 Look inside `../dvc-practice-storage`: you'll see folders with hash-like names. That's where DVC
@@ -114,38 +227,74 @@ example `url = s3://your-company-bucket/dvc-store`. [DVC in your own project](ro
 The data provider sends a refresh with 20 more trading days, including a market sell-off:
 
 ```powershell
-python make_data.py --update
-dvc status
+uv run make_data.py --update
+uv run dvc status
+```
+
+You should see:
+
+```text
+Wrote data/prices.csv (270 trading days) and data/companies.csv
+data\prices.csv.dvc:
+	changed outs:
+		modified:           data\prices.csv
 ```
 
 `dvc status` tells you that `data/prices.csv` has changed. `data/companies.csv` hasn't: the script
 rewrote it with the same content, and DVC compares content, not dates. Record the new version:
 
 ```powershell
-dvc add data/prices.csv
+uv run dvc add data/prices.csv
 git add data/prices.csv.dvc
 git commit -m "Refresh prices: 20 more trading days"
-dvc push
+uv run dvc push
 git log --oneline
 ```
+
+You should see:
+
+```text
+[main a5c9f4e] Refresh prices: 20 more trading days
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+1 file pushed
+a5c9f4e Refresh prices: 20 more trading days
+2da773d Configure practice storage
+efe1ca4 Add input data, version 1
+41a2484 Start practice project with DVC
+```
+
+Only one file is pushed, the new prices: `companies.csv` and the old prices are already on the
+remote.
 
 Now go back to version 1 of the prices, without touching anything else:
 
 ```powershell
 git checkout HEAD~1 -- data/prices.csv.dvc   # the pointer from one commit ago
-dvc checkout data/prices.csv.dvc             # make the data match the pointer
-python -c "import pandas as pd; print(len(pd.read_csv('data/prices.csv')), 'days')"
+uv run dvc checkout data/prices.csv.dvc      # make the data match the pointer
+uv run python -c "import pandas as pd; print(len(pd.read_csv('data/prices.csv')), 'days')"
 ```
 
-It prints `250 days`. Come back to the latest version:
+You should see:
+
+```text
+M       data\prices.csv
+250 days
+```
+
+`M` means DVC modified the file in your folder. Come back to the latest version:
 
 ```powershell
 git checkout HEAD -- data/prices.csv.dvc
-dvc checkout data/prices.csv.dvc
-python -c "import pandas as pd; print(len(pd.read_csv('data/prices.csv')), 'days')"
+uv run dvc checkout data/prices.csv.dvc
+uv run python -c "import pandas as pd; print(len(pd.read_csv('data/prices.csv')), 'days')"
 ```
 
-It prints `270 days`.
+You should see:
+
+```text
+M       data\prices.csv
+270 days
+```
 
 > **Remember the pair:** `git checkout` moves the pointers, `dvc checkout` moves the data to match.
 > Every time you switch commits or branches, run `dvc checkout` afterwards.
@@ -156,10 +305,16 @@ So far DVC only stores data. Now let it run calculations too. The first stage tu
 daily returns:
 
 ```powershell
-dvc stage add -n returns `
+uv run dvc stage add -n returns `
   -d returns.py -d data/prices.csv `
   -o data/returns.csv `
   python returns.py
+```
+
+You should see:
+
+```text
+Added stage 'returns' in 'dvc.yaml'
 ```
 
 In PowerShell, a backtick `` ` `` at the very end of a line means "the command continues on the
@@ -177,7 +332,19 @@ Each option means:
 This wrote a file called `dvc.yaml`, the recipe. Run it:
 
 ```powershell
-dvc repro
+uv run dvc repro
+```
+
+You should see:
+
+```text
+'data\prices.csv.dvc' didn't change, skipping
+Running stage 'returns':
+> python returns.py
+Wrote data/returns.csv (269 days)
+Generating lock file 'dvc.lock'
+Updating lock file 'dvc.lock'
+Use `dvc push` to send your updates to remote storage.
 ```
 
 DVC runs the stage and writes `dvc.lock`, the receipt. Open both files and compare: `dvc.yaml`
@@ -188,25 +355,41 @@ git add dvc.yaml dvc.lock data/.gitignore
 git commit -m "Add returns stage"
 ```
 
+You should see:
+
+```text
+[main 6b04145] Add returns stage
+ 3 files changed, 27 insertions(+)
+ create mode 100644 dvc.lock
+ create mode 100644 dvc.yaml
+```
+
 ## Step 7 – A pipeline with settings and metrics
 
 Add the two other stages. They read their settings from `params.yaml`, and each writes a small
 metrics file:
 
 ```powershell
-dvc stage add -n risk `
+uv run dvc stage add -n risk `
   -d risk.py -d data/returns.csv `
   -p risk `
   -o data/portfolio_returns.csv `
   -M metrics/risk.json `
   python risk.py
 
-dvc stage add -n climate_stress `
+uv run dvc stage add -n climate_stress `
   -d climate_stress.py -d data/companies.csv `
   -p scenario `
   -o data/stressed.csv `
   -M metrics/stress.json `
   python climate_stress.py
+```
+
+You should see:
+
+```text
+Added stage 'risk' in 'dvc.yaml'
+Added stage 'climate_stress' in 'dvc.yaml'
 ```
 
 Two new options:
@@ -256,20 +439,75 @@ stages:
 Run it and look at the results:
 
 ```powershell
-dvc repro          # returns is skipped (nothing changed); risk and climate_stress run
-dvc dag            # draws the pipeline in the terminal
-dvc metrics show   # prints both metrics files as a table
+uv run dvc repro          # returns is skipped (nothing changed); risk and climate_stress run
+uv run dvc dag            # draws the pipeline in the terminal
+uv run dvc metrics show   # prints both metrics files as a table
 ```
 
-You should see a 1-day Value at Risk of 2.177% and, in the stress test, Echo Airlines losing
-40.3% of its profit at a carbon price of 85 €/t.
+You should see:
+
+```text
+'data\prices.csv.dvc' didn't change, skipping
+Stage 'returns' didn't change, skipping
+Running stage 'risk':
+> python risk.py
+1-day VaR at 99%: 2.177% of portfolio value
+Updating lock file 'dvc.lock'
+
+'data\companies.csv.dvc' didn't change, skipping
+Running stage 'climate_stress':
+> python climate_stress.py
+Orderly transition 2030: worst hit Echo Airlines (40.3% of profit)
+Updating lock file 'dvc.lock'
+Use `dvc push` to send your updates to remote storage.
++---------------------+
+| data\prices.csv.dvc |
++---------------------+
+            *
+            *
+            *
+      +---------+
+      | returns |
+      +---------+
+            *
+            *
+            *
+        +------+
+        | risk |
+        +------+
++------------------------+
+| data\companies.csv.dvc |
++------------------------+
+             *
+             *
+             *
+    +----------------+
+    | climate_stress |
+    +----------------+
+Path                 annual_volatility_pct    average_profit_hit_pct    carbon_price_eur    confidence    one_day_var_pct    scenario                 window_days    worst_company    worst_profit_hit_pct
+metrics\risk.json    16.219                   -                         -                   0.99          2.177              -                        200            -                -
+metrics\stress.json  -                        22.9                      85                  -             -                  Orderly transition 2030  -              Echo Airlines    40.3
+```
+
+The 1-day Value at Risk is 2.177% and, in the stress test, Echo Airlines loses 40.3% of its
+profit at a carbon price of 85 €/t. The metrics table is wide: scroll to the right to see it all.
 
 Save everything, including the metrics:
 
 ```powershell
 git add dvc.yaml dvc.lock metrics data/.gitignore
 git commit -m "Add risk and climate stress stages"
-dvc push
+uv run dvc push
+```
+
+You should see:
+
+```text
+[main ec9fa2b] Add risk and climate stress stages
+ 5 files changed, 95 insertions(+)
+ create mode 100644 metrics/risk.json
+ create mode 100644 metrics/stress.json
+3 files pushed
 ```
 
 ## Step 8 – Change a setting and watch what reruns
@@ -278,30 +516,55 @@ This is where DVC saves time. Open `params.yaml` and change the carbon price fro
 Then:
 
 ```powershell
-dvc status
+uv run dvc status
+```
+
+You should see:
+
+```text
+climate_stress:
+	changed deps:
+		params.yaml:
+			modified:           scenario
 ```
 
 DVC reports that only `climate_stress` is out of date, because only its params section changed.
 Run it:
 
 ```powershell
-dvc repro
+uv run dvc repro
+```
+
+You should see:
+
+```text
+'data\prices.csv.dvc' didn't change, skipping
+Stage 'returns' didn't change, skipping
+Stage 'risk' didn't change, skipping
+'data\companies.csv.dvc' didn't change, skipping
+Running stage 'climate_stress':
+> python climate_stress.py
+Orderly transition 2030: worst hit Echo Airlines (71.1% of profit)
+Updating lock file 'dvc.lock'
+Use `dvc push` to send your updates to remote storage.
 ```
 
 Only `climate_stress` runs. `returns` and `risk` are skipped. Now compare with the last commit:
 
 ```powershell
-dvc params diff
-dvc metrics diff
+uv run dvc params diff
+uv run dvc metrics diff
 ```
 
-`dvc metrics diff` prints something like:
+You should see:
 
-```
+```text
+Path         Param                      HEAD    workspace
+params.yaml  scenario.carbon_price_eur  85      150
 Path                 Metric                  HEAD    workspace    Change
-metrics/stress.json  average_profit_hit_pct  22.9    40.5         17.6
-metrics/stress.json  carbon_price_eur        85      150          65
-metrics/stress.json  worst_profit_hit_pct    40.3    71.1         30.8
+metrics\stress.json  average_profit_hit_pct  22.9    40.5         17.6
+metrics\stress.json  carbon_price_eur        85      150          65
+metrics\stress.json  worst_profit_hit_pct    40.3    71.1         30.8
 ```
 
 In one command you see which setting changed and what it did to the results. Keep it:
@@ -309,7 +572,15 @@ In one command you see which setting changed and what it did to the results. Kee
 ```powershell
 git add params.yaml dvc.lock metrics
 git commit -m "Stress test at 150 EUR/t"
-dvc push
+uv run dvc push
+```
+
+You should see:
+
+```text
+[main 3dde56a] Stress test at 150 EUR/t
+ 3 files changed, 9 insertions(+), 9 deletions(-)
+1 file pushed
 ```
 
 ## Step 9 – Try an idea on a branch
@@ -320,23 +591,55 @@ Someone suggests a "greener" portfolio. Try it without disturbing the main line 
 git switch -c greener-portfolio
 ```
 
+You should see:
+
+```text
+Switched to a new branch 'greener-portfolio'
+```
+
 In `params.yaml`, change the weights to: Alpine Steel `0.10`, Blue Wind `0.40`,
 Coastal Cement `0.10`, Delta Retail `0.25`, Echo Airlines `0.15`. Then:
 
 ```powershell
-dvc repro                   # only risk reruns
-dvc metrics diff main       # compare with the main branch
+uv run dvc repro               # only risk reruns
+uv run dvc metrics diff main   # compare with the main branch
 ```
 
-You'll see the annual volatility fall from 16.2% to 15.0%, but the 1-day VaR rise from 2.18% to
+You should see:
+
+```text
+'data\prices.csv.dvc' didn't change, skipping
+Stage 'returns' didn't change, skipping
+Running stage 'risk':
+> python risk.py
+1-day VaR at 99%: 2.296% of portfolio value
+Updating lock file 'dvc.lock'
+
+'data\companies.csv.dvc' didn't change, skipping
+Stage 'climate_stress' didn't change, skipping
+Use `dvc push` to send your updates to remote storage.
+Path               Metric                 main    workspace    Change
+metrics\risk.json  annual_volatility_pct  16.219  15.018       -1.201
+metrics\risk.json  one_day_var_pct        2.177   2.296        0.119
+```
+
+The annual volatility falls from 16.2% to 15.0%, but the 1-day VaR rises from 2.18% to
 2.30%. Lower volatility, but a worse bad day. That's exactly the kind of finding you want recorded.
 If the team likes it, commit and merge the branch. If not, throw it away:
 
 ```powershell
-git restore .               # undo the uncommitted edits
+git restore .         # undo the uncommitted edits
 git switch main
-dvc checkout                # data back to main's version
+uv run dvc checkout   # data back to main's version
 git branch -D greener-portfolio
+```
+
+You should see:
+
+```text
+Switched to branch 'main'
+M       data\portfolio_returns.csv
+Deleted branch greener-portfolio (was 3dde56a).
 ```
 
 ## Step 10 – Be your own colleague
@@ -347,12 +650,32 @@ A colleague needs your results. They clone the project and pull the data. Nothin
 cd C:\
 git clone dvc-practice dvc-practice-colleague
 cd dvc-practice-colleague
-uv venv
-.venv\Scripts\activate
-uv pip install -r requirements.txt
-dvc pull                             # fetches every file the receipt names
-dvc status                           # "Data and pipelines are up to date."
+uv sync             # same packages as you, thanks to uv.lock
+uv run dvc pull     # fetches every file the receipt names
+uv run dvc status   # "Data and pipelines are up to date."
 ```
+
+You should see:
+
+```text
+Cloning into 'dvc-practice-colleague'...
+done.
+Using CPython 3.14.4
+Creating virtual environment at: .venv
+Resolved 112 packages in 1ms
+Installed 101 packages in 1.67s
+ + aiohappyeyeballs==2.7.1
+ ...                                   (about 100 lines, one per package)
+A       data\companies.csv
+A       data\portfolio_returns.csv
+A       data\prices.csv
+A       data\returns.csv
+A       data\stressed.csv
+5 files fetched and 5 files added
+Data and pipelines are up to date.
+```
+
+`A` means DVC added the file to the colleague's folder.
 
 The colleague now has exactly your data, byte for byte. This is how teams share
 results: one person runs the pipeline and pushes, everyone else pulls.
@@ -382,8 +705,10 @@ timestamps. This surprises many people, and it is one of DVC's biggest time save
 Find the commit with `git log --oneline` (the one named "Add input data, version 1"), then:
 
 ```powershell
-dvc get . data/prices.csv --rev <commit-id> -o prices_v1.csv
+uv run dvc get . data/prices.csv --rev <commit-id> -o prices_v1.csv
 ```
+
+It prints nothing. A new file `prices_v1.csv` appears in the folder, with the 250 days of version 1.
 
 `dvc get` downloads one file at one version. It also works with a GitHub URL instead of `.`,
 which is useful for people who don't want to clone a whole repository.
