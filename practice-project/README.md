@@ -1,6 +1,6 @@
 # Practice project: a small portfolio risk pipeline
 
-This folder is the starting point for [the practice project page](../docs/route-3-2-practice-project.md).
+This folder is the starting point for [the practice project page](../docs/2-practice-project.md).
 It is safe to break: everything runs on your laptop, with made-up data and no credentials.
 
 | File | What it does |

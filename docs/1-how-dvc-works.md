@@ -1,21 +1,21 @@
-[Home](../README.md) › Route 3 › Page 1 of 4
+[Home](../README.md) › Page 1 of 4
 
-# Route 3: Run pipelines — 1. How DVC works
+# 1. How DVC works
 
 **For you if** you run calculations on data, such as risk models, ratings or scenario analysis,
 and you want results you can rebuild exactly, months later.
 
-Route 3 has four pages:
+The tutorial has four pages:
 
 1. **How DVC works** (this page, 10 minutes)
-2. [Practice project](route-3-2-practice-project.md) (1 hour)
-3. [DVC in your own project](route-3-3-your-own-project.md) (1 hour)
-4. [Good habits](route-3-4-good-habits.md) (5 minutes)
+2. [Practice project](2-practice-project.md) (1 hour)
+3. [DVC in your own project](3-your-own-project.md) (1 hour)
+4. [Good habits](4-good-habits.md) (5 minutes)
 
 **Before you start:** do steps 1 to 6 of [Setup](setup.md). New to git? Also read
 [Git and uv basics](git-and-uv-basics.md).
 
-**Used DVC before?** Skim this page and go to the [practice project](route-3-2-practice-project.md).
+**Used DVC before?** Skim this page and go to the [practice project](2-practice-project.md).
 
 ## The five ideas behind DVC
 
@@ -81,4 +81,4 @@ changed, and it knows what changed because it compares hashes.
 
 ---
 
-[Next: Practice project](route-3-2-practice-project.md) →
+[Next: Practice project](2-practice-project.md) →

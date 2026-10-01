@@ -2,21 +2,19 @@
 
 # Set up your computer
 
-Do only the steps your route needs:
+Do steps 1 to 6 once. Step 7 is optional.
 
-| Step | Route 1: no git | Route 2: with DVC | Route 3: pipelines |
-|---|---|---|---|
-| [1. Open a terminal](#step-1--open-a-terminal) | Yes | Yes | Yes |
-| [2. Choose where your projects live](#step-2--choose-where-your-projects-live) | Yes | Yes | Yes |
-| [3. Install uv](#step-3--install-uv) | Yes | Yes | Yes |
-| [4. Store your storage keys](#step-4--store-your-storage-keys) | Yes | Yes | Yes |
-| [5. Install git](#step-5--install-git) | | Yes | Yes |
-| [6. Allow PowerShell to run scripts](#step-6--allow-powershell-to-run-scripts) | | Yes | Yes |
-| [7. Optional: use VS Code](#step-7--optional-use-vs-code) | Optional | Optional | Optional |
+1. [Open a terminal](#step-1--open-a-terminal)
+2. [Choose where your projects live](#step-2--choose-where-your-projects-live)
+3. [Install uv](#step-3--install-uv)
+4. [Store your storage keys](#step-4--store-your-storage-keys)
+5. [Install git](#step-5--install-git)
+6. [Allow PowerShell to run scripts](#step-6--allow-powershell-to-run-scripts)
+7. [Optional: use VS Code](#step-7--optional-use-vs-code)
 
 ## Good at git: quick checklist
 
-> **Good at git?** Check these six points, then go back to your route.
+> **Good at git?** Check these six points, then [start the tutorial](1-how-dvc-works.md).
 >
 > 1. git works in PowerShell, and `git config --global core.longpaths true` is set.
 > 2. uv is installed: `uv --version`.
@@ -168,7 +166,7 @@ Then open the Extensions view (Ctrl+Shift+X) and install:
 
 **Open a project and a terminal.**
 
-1. *File → Open Folder* and choose the project folder, for example `C:\projects\team-inputs`.
+1. *File → Open Folder* and choose the project folder, for example `C:\dvc-practice`.
 2. *Terminal → New Terminal* (or Ctrl+`). A PowerShell terminal opens **already inside the project
    folder**, so you never need to `cd` into it.
 3. If VS Code asks which Python to use, choose the one in `.venv`. If it doesn't ask, press
@@ -188,11 +186,8 @@ because it's the same PowerShell.
 
 ## Done
 
-Go back to your route:
-
-- [Route 1: Save file versions, no git](route-1-save-files-no-git.md)
-- [Route 2: Save file versions with DVC](route-2-save-files-with-dvc.md)
-- [Route 3: Run pipelines](route-3-1-how-dvc-works.md). New to git? Read [Git and uv basics](git-and-uv-basics.md) first.
+New to git? Read [Git and uv basics](git-and-uv-basics.md) first. Then start the tutorial:
+[1. How DVC works](1-how-dvc-works.md).
 
 ---
 

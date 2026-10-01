@@ -4,7 +4,6 @@
 
 | Word | Meaning |
 |---|---|
-| **Board** | pins: the place where pins are stored, such as a folder in an S3 bucket. |
 | **Cache** | The hidden folder (`.dvc/cache`) where DVC keeps a copy of each data version on your computer. |
 | **Checkout** | `git checkout` moves code and pointers to a version; `dvc checkout` makes the data match. |
 | **Commit** | A named snapshot of the project in git. |
@@ -15,7 +14,6 @@
 | **Metric** | A small results file kept in git (`cache: false`) so changes show in pull requests. |
 | **Output (out)** | A file or folder a stage produces. DVC stores and versions it. |
 | **Params** | Settings from a config file that a stage depends on, key by key. |
-| **Pin** | pins: a named dataset, kept in versions on a board. |
 | **Pipeline** | Stages linked by their dependencies and outputs, described in `dvc.yaml`. |
 | **Pull / push** | Get data from / send data to the remote. |
 | **Remote** | Shared storage for data versions, such as an S3 bucket. |

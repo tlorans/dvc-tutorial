@@ -1,6 +1,6 @@
-[Home](../README.md) › Route 3 › Page 3 of 4
+[Home](../README.md) › Page 3 of 4
 
-# Route 3: Run pipelines — 3. DVC in your own project
+# 3. DVC in your own project
 
 The practice project had three stages on a laptop. A real financial project has more stages,
 shared cloud storage, credentials, several people, and releases that must be reproducible months
@@ -244,7 +244,7 @@ uv run dvc metrics diff
 
 ### "I want to try an idea without disturbing anyone"
 
-Work on a branch, exactly as in [Step 9](route-3-2-practice-project.md#step-9--try-an-idea-on-a-branch), and compare with
+Work on a branch, exactly as in [Step 9](2-practice-project.md#step-9--try-an-idea-on-a-branch), and compare with
 `uv run dvc metrics diff main`.
 
 ### "What do I commit after a run?"
@@ -346,4 +346,4 @@ run this check on release branches only, since feature branches are expected to 
 
 ---
 
-← [Previous: Practice project](route-3-2-practice-project.md) · [Next: Good habits](route-3-4-good-habits.md) →
+← [Previous: Practice project](2-practice-project.md) · [Next: Good habits](4-good-habits.md) →

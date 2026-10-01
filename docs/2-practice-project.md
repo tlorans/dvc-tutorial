@@ -1,6 +1,6 @@
-[Home](../README.md) › Route 3 › Page 2 of 4
+[Home](../README.md) › Page 2 of 4
 
-# Route 3: Run pipelines — 2. Practice project
+# 2. Practice project
 
 > **Good at git?** Steps 1, 2 and 5 are routine for you: skim them.
 >
@@ -220,7 +220,7 @@ Setting 'practice' as a default remote.
 
 Look inside `../dvc-practice-storage`: you'll see folders with hash-like names. That's where DVC
 keeps every version. In a real project, the same line in `.dvc/config` points to cloud storage, for
-example `url = s3://your-company-bucket/dvc-store`. [DVC in your own project](route-3-3-your-own-project.md) shows how to set that up.
+example `url = s3://your-company-bucket/dvc-store`. [DVC in your own project](3-your-own-project.md) shows how to set that up.
 
 ## Step 5 – A new data version, and travelling back in time
 
@@ -731,4 +731,4 @@ recomputes it.
 
 ---
 
-← [Previous: How DVC works](route-3-1-how-dvc-works.md) · [Next: DVC in your own project](route-3-3-your-own-project.md) →
+← [Previous: How DVC works](1-how-dvc-works.md) · [Next: DVC in your own project](3-your-own-project.md) →

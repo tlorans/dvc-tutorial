@@ -2,27 +2,9 @@
 
 # Cheat sheet
 
-*The commands of every route, on one page.*
+*The commands of the tutorial, on one page.*
 
-## Route 1: Save file versions, no git
-
-| Task | Code |
-|---|---|
-| Get the latest version | `board.pin_download("<name>")` |
-| Save a new version | `board.pin_upload("<file>", name="<name>", title="<message>")` |
-| See the history | `board.pin_versions("<name>")` |
-| Get an old version | `board.pin_download("<name>", version="<version-id>")` |
-
-## Route 2: Save file versions with DVC
-
-| Task | Command |
-|---|---|
-| Get the latest versions | `git pull`, then `uv run dvc pull` |
-| Save a new version | `.\save-data.ps1 <file> "<message>"` |
-| See the history of a file | `git log --oneline -- <file>.dvc` |
-| Get an old version as a new file | `uv run dvc get . <file> --rev <id> -o <new name>` |
-
-## Route 3: Run pipelines
+## Run pipelines
 
 | Task | Command |
 |---|---|

@@ -2,7 +2,7 @@
 
 # Git and uv basics
 
-*For people new to git, before Route 2 or Route 3. It takes about 15 minutes.*
+*For people new to git, before you start the tutorial. It takes about 15 minutes.*
 
 **Good at git?** Skip this page.
 
@@ -60,10 +60,7 @@ There is nothing to activate, and `uv run` always checks first that your package
 
 ## Done
 
-Go back to your route:
-
-- [Route 2: Save file versions with DVC](route-2-save-files-with-dvc.md)
-- [Route 3: Run pipelines](route-3-1-how-dvc-works.md)
+Start the tutorial: [1. How DVC works](1-how-dvc-works.md).
 
 ---
 
